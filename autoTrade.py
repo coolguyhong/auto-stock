@@ -264,11 +264,11 @@ def sell_all():
 
 if __name__ == '__main__':
     try:
-        symbol_list = ['A122630', 'A252670', 'A233740', 'A250780', 'A225130',
-                       'A280940', 'A261220', 'A217770', 'A295000', 'A176950']
+        symbol_list = ['A122630', 'A225130', 'A278240', 'A117700', 'A300950', 'A228800']
+        # KODEX 레버리지, KINDEX 골드선물 레버리징, KBSTAR 코스닥150선물레버리지, KODEX 건설, KODEX 게임산업, TIGER 여행레저
         bought_list = []  # 매수 완료된 종목 리스트
-        target_buy_count = 5  # 매수할 종목 수
-        buy_percent = 0.19  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
+        target_buy_count = 4  # 매수할 종목 수
+        buy_percent = 0.25  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
         printlog('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
         stocks = get_stock_balance('ALL')  # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())  # 100% 증거금 주문 가능 금액 조회
