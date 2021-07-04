@@ -2,7 +2,6 @@ import os, sys, ctypes
 import win32com.client
 import pandas as pd
 from datetime import datetime
-from slacker import Slacker
 import time, calendar
 import requests
 # from bs4 import BeautifulSoup
