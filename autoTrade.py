@@ -24,7 +24,7 @@ def post_message(token, channel, text):
                             )
 
 
-def dbgout(message, *args):
+def printlog(message, *args):
     """인자로 받은 문자열을 파이썬 셸에 출력한다."""
     print(datetime.now().strftime('[%m/%d %H:%M:%S]'), message, *args)
 
