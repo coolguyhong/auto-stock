@@ -4,10 +4,6 @@ import pandas as pd
 from datetime import datetime
 import time, calendar
 import requests
-# from bs4 import BeautifulSoup
-# from urllib.request import urlopen
-# from selenium import webdriver
-# from selenium.webdriver.chrome.options import Options
 
 myToken = "xoxb-2237722976004-2255239591280-aZYlOPpIMINDk9BlLalORN6E"
 
