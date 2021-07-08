@@ -204,16 +204,16 @@ def buy_etf(code):
             # 5:조건부, 12:최유리, 13:최우선
             # 매수 주문 요청
             ret = cpOrder.BlockRequest()
-            dbgout('최유리 FoK 매수 ->', stock_name, code, buy_qty, '->', ret)
+            printlog('최유리 FoK 매수 ->', stock_name, code, buy_qty, '->', ret)
             if ret == 4:
                 remain_time = cpStatus.LimitRequestRemainTime
-                dbgout('주의: 연속 주문 제한에 걸림. 대기 시간:', remain_time / 1000)
+                printlog('주의: 연속 주문 제한에 걸림. 대기 시간:', remain_time / 1000)
                 time.sleep(remain_time / 1000)
                 return False
             time.sleep(2)
-            dbgout('현금주문 가능금액 :', buy_amount)
+            printlog('현금주문 가능금액 :', buy_amount)
             stock_name, bought_qty = get_stock_balance(code)
-            dbgout('get_stock_balance :', stock_name, stock_qty)
+            printlog('get_stock_balance :', stock_name, stock_qty)
             if bought_qty > 0:
                 bought_list.append(code)
                 dbgout("`buy_etf(" + str(stock_name) + ' : ' + str(code) +
@@ -246,11 +246,11 @@ def sell_all():
                     cpOrder.SetInputValue(8, "12")  # 호가 12:최유리, 13:최우선
                     # 최유리 IOC 매도 주문 요청
                     ret = cpOrder.BlockRequest()
-                    dbgout('최유리 IOC 매도', s['code'], s['name'], s['qty'],
+                    printlog('최유리 IOC 매도', s['code'], s['name'], s['qty'],
                              '-> cpOrder.BlockRequest() -> returned', ret)
                     if ret == 4:
                         remain_time = cpStatus.LimitRequestRemainTime
-                        dbgout('주의: 연속 주문 제한, 대기시간:', remain_time / 1000)
+                        printlog('주의: 연속 주문 제한, 대기시간:', remain_time / 1000)
                 time.sleep(1)
             time.sleep(30)
     except Exception as ex:
@@ -264,14 +264,14 @@ if __name__ == '__main__':
         bought_list = []  # 매수 완료된 종목 리스트
         target_buy_count = 4  # 매수할 종목 수
         buy_percent = 0.25  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
-        dbgout('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
+        printlog('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
         stocks = get_stock_balance('ALL')  # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())  # 100% 증거금 주문 가능 금액 조회
         buy_amount = total_cash * buy_percent  # 종목별 주문 금액 계산
-        dbgout('100% 증거금 주문 가능 금액 :', total_cash)
-        dbgout('종목별 주문 비율 :', buy_percent)
-        dbgout('종목별 주문 금액 :', buy_amount)
-        dbgout('시작 시간 :', datetime.now().strftime('%m/%d %H:%M:%S'))
+        printlog('100% 증거금 주문 가능 금액 :', total_cash)
+        printlog('종목별 주문 비율 :', buy_percent)
+        printlog('종목별 주문 금액 :', buy_amount)
+        printlog('시작 시간 :', datetime.now().strftime('%m/%d %H:%M:%S'))
         soldOut = False
 
         while True:
@@ -282,7 +282,7 @@ if __name__ == '__main__':
             t_exit = t_now.replace(hour=15, minute=20, second=0, microsecond=0)
             today = datetime.today().weekday()
             if today == 5 or today == 6:  # 토요일이나 일요일이면 자동 종료
-                dbgout('Today is', 'Saturday.' if today == 5 else 'Sunday.')
+                printlog('Today is', 'Saturday.' if today == 5 else 'Sunday.')
                 sys.exit(0)
             if t_9 < t_now < t_start and soldOut == False:
                 soldOut = True
