@@ -56,6 +56,7 @@ def check_creon_system():
 
 
 def get_current_price(code):
+    dbgout('### start get_current_price and code : ' + code + ' ###')
     """인자로 받은 종목의 현재가, 매도호가, 매수호가를 반환한다."""
     cpStock.SetInputValue(0, code)  # 종목코드에 대한 가격 정보
     cpStock.BlockRequest()
@@ -67,6 +68,7 @@ def get_current_price(code):
 
 
 def get_ohlc(code, qty):
+    dbgout('### start get_ohlc and code and qty : ' + code + ' / ' + str(qty) + ' ###')
     """인자로 받은 종목의 OHLC 가격 정보를 qty 개수만큼 반환한다."""
     cpOhlc.SetInputValue(0, code)  # 종목코드
     cpOhlc.SetInputValue(1, ord('2'))  # 1:기간, 2:개수
@@ -89,6 +91,7 @@ def get_ohlc(code, qty):
 
 def get_stock_balance(code):
     """인자로 받은 종목의 종목명과 수량을 반환한다."""
+    dbgout('### start get_stock_balance and code : ' + code + ' ###')
     cpTradeUtil.TradeInit()
     acc = cpTradeUtil.AccountNumber[0]  # 계좌번호
     accFlag = cpTradeUtil.GoodsList(acc, 1)  # -1:전체, 1:주식, 2:선물/옵션
@@ -123,6 +126,7 @@ def get_stock_balance(code):
 
 def get_current_cash():
     """증거금 100% 주문 가능 금액을 반환한다."""
+    dbgout('### start get_current_cash ###')
     cpTradeUtil.TradeInit()
     acc = cpTradeUtil.AccountNumber[0]  # 계좌번호
     accFlag = cpTradeUtil.GoodsList(acc, 1)  # -1:전체, 1:주식, 2:선물/옵션
@@ -135,6 +139,7 @@ def get_current_cash():
 def get_target_price(code):
     """매수 목표가를 반환한다."""
     try:
+        dbgout('### start get_target_price and code : ' + code + ' ###')
         time_now = datetime.now()
         str_today = time_now.strftime('%Y%m%d')
         ohlc = get_ohlc(code, 10)
@@ -146,6 +151,9 @@ def get_target_price(code):
             today_open = lastday[3]
         lastday_high = lastday[1]
         lastday_low = lastday[2]
+        dbgout('today_open price : ' + str(today_open))
+        dbgout('lastday_high price : ' + str(lastday_high))
+        dbgout('lastday_low price : ' + str(lastday_low))
         target_price = today_open + (lastday_high - lastday_low) * 0.1
         return target_price
     except Exception as ex:
@@ -156,6 +164,7 @@ def get_target_price(code):
 def get_movingaverage(code, window):
     """인자로 받은 종목에 대한 이동평균가격을 반환한다."""
     try:
+        dbgout('### start get_movingaverage and code and window : ' + code + ' / ' + str(window) + ' ###')
         time_now = datetime.now()
         str_today = time_now.strftime('%Y%m%d')
         ohlc = get_ohlc(code, 20)
@@ -174,17 +183,27 @@ def get_movingaverage(code, window):
 def buy_etf(code):
     """인자로 받은 종목을 최유리 지정가 FOK 조건으로 매수한다."""
     try:
+        dbgout('### start buy_etf and code : ' + code + ' ###')
         global bought_list  # 함수 내에서 값 변경을 하기 위해 global로 지정
         if code in bought_list:  # 매수 완료 종목이면 더 이상 안 사도록 함수 종료
+            dbgout('### already bought code : ' + code + ' ###')
             return False
         time_now = datetime.now()
         current_price, ask_price, bid_price = get_current_price(code)
+        dbgout('code : ' + code + ' / current_price(현재가) : ' + str(current_price))
+        dbgout('code : ' + code + ' / ask_price(매도호가) : ' + str(ask_price))
+        dbgout('code : ' + code + ' / bid_price(매수호가) : ' + str(bid_price))
         target_price = get_target_price(code)  # 매수 목표가
+        dbgout('code : ' + code + ' / target_price(매수 목표가) : ' + str(target_price))
         ma5_price = get_movingaverage(code, 5)  # 5일 이동평균가
+        dbgout('code : ' + code + ' / ma5_price(5일 이동평균가) : ' + str(ma5_price))
         ma10_price = get_movingaverage(code, 10)  # 10일 이동평균가
+        dbgout('code : ' + code + ' / ma10_price(10일 이동평균가) : ' + str(ma10_price))
         buy_qty = 0  # 매수할 수량 초기화
         if ask_price > 0:  # 매도호가가 존재하면
+            dbgout('code : ' + code + ' / buy_amount(매매 가능 금액) : ' + str(buy_amount))
             buy_qty = buy_amount // ask_price
+            dbgout('code : ' + code + ' / buy_qty(매수할 수량) : ' + str(buy_qty))
         stock_name, stock_qty = get_stock_balance(code)  # 종목명과 보유수량 조회
         if current_price > target_price and current_price > ma5_price \
                 and current_price > ma10_price:
@@ -192,6 +211,7 @@ def buy_etf(code):
                      'EA : ' + str(current_price) + ' meets the buy condition!`')
             cpTradeUtil.TradeInit()
             acc = cpTradeUtil.AccountNumber[0]  # 계좌번호
+            dbgout('### 계좌번호: ' + acc + ' ###')
             accFlag = cpTradeUtil.GoodsList(acc, 1)  # -1:전체,1:주식,2:선물/옵션
             # 최유리 FOK 매수 주문 설정
             cpOrder.SetInputValue(0, "2")  # 2: 매수
@@ -203,8 +223,11 @@ def buy_etf(code):
             cpOrder.SetInputValue(8, "12")  # 주문호가 1:보통, 3:시장가
             # 5:조건부, 12:최유리, 13:최우선
             # 매수 주문 요청
+            dbgout('### 매수 주문 요청 전 ###')
             ret = cpOrder.BlockRequest()
+            dbgout('### 매수 주문 요청 완료 ###')
             printlog('최유리 FoK 매수 ->', stock_name, code, buy_qty, '->', ret)
+            dbgout('최유리 FoK 매수 -> ' + stock_name + ' / ' + code + ' / ' + str(buy_qty) + ' / ' + str(ret))
             if ret == 4:
                 remain_time = cpStatus.LimitRequestRemainTime
                 printlog('주의: 연속 주문 제한에 걸림. 대기 시간:', remain_time / 1000)
@@ -212,8 +235,10 @@ def buy_etf(code):
                 return False
             time.sleep(2)
             printlog('현금주문 가능금액 :', buy_amount)
+            dbgout('code : ' + code + ' / 현금주문 가능금액 : ' + str(buy_amount))
             stock_name, bought_qty = get_stock_balance(code)
-            printlog('get_stock_balance :', stock_name, stock_qty)
+            printlog('get_stock_balance :', stock_name, bought_qty)
+            dbgout('code : ' + code + ' / get_stock_balance after 주문 후 : ' + stock_name + ' / ' + str(bought_qty))
             if bought_qty > 0:
                 bought_list.append(code)
                 dbgout("`buy_etf(" + str(stock_name) + ' : ' + str(code) +
@@ -225,6 +250,7 @@ def buy_etf(code):
 def sell_all():
     """보유한 모든 종목을 최유리 지정가 IOC 조건으로 매도한다."""
     try:
+        dbgout('### start sell_all() ###')
         cpTradeUtil.TradeInit()
         acc = cpTradeUtil.AccountNumber[0]  # 계좌번호
         accFlag = cpTradeUtil.GoodsList(acc, 1)  # -1:전체, 1:주식, 2:선물/옵션
@@ -269,8 +295,11 @@ if __name__ == '__main__':
         total_cash = int(get_current_cash())  # 100% 증거금 주문 가능 금액 조회
         buy_amount = total_cash * buy_percent  # 종목별 주문 금액 계산
         printlog('100% 증거금 주문 가능 금액 :', total_cash)
+        dbgout('100% 증거금 주문 가능 금액 : ' + str(total_cash))
         printlog('종목별 주문 비율 :', buy_percent)
+        dbgout('종목별 주문 비율 : ' + str(buy_percent))
         printlog('종목별 주문 금액 :', buy_amount)
+        dbgout('종목별 주문 금액 : ' + str(buy_amount))
         printlog('시작 시간 :', datetime.now().strftime('%m/%d %H:%M:%S'))
         soldOut = False
 
@@ -283,19 +312,31 @@ if __name__ == '__main__':
             today = datetime.today().weekday()
             if today == 5 or today == 6:  # 토요일이나 일요일이면 자동 종료
                 printlog('Today is', 'Saturday.' if today == 5 else 'Sunday.')
+                dbgout('Today is Saturday or Sunday.')
                 sys.exit(0)
             if t_9 < t_now < t_start and soldOut == False:
                 soldOut = True
+                dbgout('장 시작 전 팔지 않은 것이 있으면 모두 팔기')
+                dbgout('before call sell_all()')
                 sell_all()
+                dbgout('after call sell_all()')
             if t_start < t_now < t_sell:  # AM 09:05 ~ PM 03:15 : 매수
                 for sym in symbol_list:
+                    dbgout('symbol_list for 문 안 종목명 : ' + sym)
+                    dbgout('매수한 종목명 수 : ' + str(len(bought_list)))
                     if len(bought_list) < target_buy_count:
+                        dbgout('byt_etf 시도 종목 : ' + sym)
+                        dbgout('before call buy_etf(sym) : ' + sym)
                         buy_etf(sym)
+                        dbgout('after call buy_etf(sym) : ' + sym)
                         time.sleep(1)
                 if t_now.minute == 30 and 0 <= t_now.second <= 5:
+                    dbgout('before call get_stock_balance()')
                     get_stock_balance('ALL')
+                    dbgout('after call get_stock_balance()')
                     time.sleep(5)
             if t_sell < t_now < t_exit:  # PM 03:15 ~ PM 03:20 : 일괄 매도
+                dbgout('before call sell_all()')
                 if sell_all() == True:
                     dbgout('`sell_all() returned True -> self-destructed!`')
                     sys.exit(0)
