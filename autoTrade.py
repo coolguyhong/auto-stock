@@ -284,11 +284,10 @@ if __name__ == '__main__':
         total_cash = int(get_current_cash())  # 100% 증거금 주문 가능 금액 조회
         buy_amount = total_cash * buy_percent  # 종목별 주문 금액 계산
         printlog('100% 증거금 주문 가능 금액 :', total_cash)
-        dbgout('100% 증거금 주문 가능 금액 : ' + str(total_cash))
         printlog('종목별 주문 비율 :', buy_percent)
-        dbgout('종목별 주문 비율 : ' + str(buy_percent))
         printlog('종목별 주문 금액 :', buy_amount)
-        dbgout('종목별 주문 금액 : ' + str(buy_amount))
+        dbgout('100% 증거금 주문 가능 금액 : ' + str(total_cash) +
+               '/ 종목별 주문 금액 : ' + str(buy_amount))
         printlog('시작 시간 :', datetime.now().strftime('%m/%d %H:%M:%S'))
         soldOut = False
 
