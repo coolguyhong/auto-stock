@@ -56,7 +56,6 @@ def check_creon_system():
 
 
 def get_current_price(code):
-    dbgout('### start get_current_price and code : ' + code + ' ###')
     """인자로 받은 종목의 현재가, 매도호가, 매수호가를 반환한다."""
     cpStock.SetInputValue(0, code)  # 종목코드에 대한 가격 정보
     cpStock.BlockRequest()
@@ -68,7 +67,6 @@ def get_current_price(code):
 
 
 def get_ohlc(code, qty):
-    dbgout('### start get_ohlc and code and qty : ' + code + ' / ' + str(qty) + ' ###')
     """인자로 받은 종목의 OHLC 가격 정보를 qty 개수만큼 반환한다."""
     cpOhlc.SetInputValue(0, code)  # 종목코드
     cpOhlc.SetInputValue(1, ord('2'))  # 1:기간, 2:개수
@@ -151,9 +149,8 @@ def get_target_price(code):
             today_open = lastday[3]
         lastday_high = lastday[1]
         lastday_low = lastday[2]
-        dbgout('today_open price : ' + str(today_open))
-        dbgout('lastday_high price : ' + str(lastday_high))
-        dbgout('lastday_low price : ' + str(lastday_low))
+        dbgout('today_open price : ' + str(today_open) + ' / lastDay_high price : ' + str(lastday_high) +
+               ' / lastDay_low price : ' + str(lastday_low))
         target_price = today_open + (lastday_high - lastday_low) * 0.1
         return target_price
     except Exception as ex:
@@ -190,25 +187,26 @@ def buy_etf(code):
             return False
         time_now = datetime.now()
         current_price, ask_price, bid_price = get_current_price(code)
-        dbgout('code : ' + code + ' / current_price(현재가) : ' + str(current_price))
-        dbgout('code : ' + code + ' / ask_price(매도호가) : ' + str(ask_price))
-        dbgout('code : ' + code + ' / bid_price(매수호가) : ' + str(bid_price))
         target_price = get_target_price(code)  # 매수 목표가
-        dbgout('code : ' + code + ' / target_price(매수 목표가) : ' + str(target_price))
         ma5_price = get_movingaverage(code, 5)  # 5일 이동평균가
-        dbgout('code : ' + code + ' / ma5_price(5일 이동평균가) : ' + str(ma5_price))
         ma10_price = get_movingaverage(code, 10)  # 10일 이동평균가
-        dbgout('code : ' + code + ' / ma10_price(10일 이동평균가) : ' + str(ma10_price))
         buy_qty = 0  # 매수할 수량 초기화
         if ask_price > 0:  # 매도호가가 존재하면
             dbgout('code : ' + code + ' / buy_amount(매매 가능 금액) : ' + str(buy_amount))
             buy_qty = buy_amount // ask_price
             dbgout('code : ' + code + ' / buy_qty(매수할 수량) : ' + str(buy_qty))
-        stock_name, stock_qty = get_stock_balance(code)  # 종목명과 보유수량 조회
+        if buy_qty < 1:
+            dbgout('매수할 수량이 없습니다. buy_qty :  ' + str(buy_qty))
+            return False
+        dbgout('code : ' + code + ' / current_price(현재가) : ' + str(current_price) +
+               ' / target_price(매수 목표가) : ' + str(target_price) +
+               ' / ma5_price(5일 이동평균가) : ' + str(ma5_price) +
+               ' / ma10_price(10일 이동평균가) : ' + str(ma10_price))
         if current_price > target_price and current_price > ma5_price \
                 and current_price > ma10_price:
+            stock_name, stock_qty = get_stock_balance(code)  # 종목명과 보유수량 조회
             dbgout(stock_name + '(' + str(code) + ') ' + str(buy_qty) +
-                     'EA : ' + str(current_price) + ' meets the buy condition!`')
+                   'EA : ' + str(current_price) + ' meets the buy condition!`')
             cpTradeUtil.TradeInit()
             acc = cpTradeUtil.AccountNumber[0]  # 계좌번호
             dbgout('### 계좌번호: ' + acc + ' ###')
@@ -223,19 +221,16 @@ def buy_etf(code):
             cpOrder.SetInputValue(8, "12")  # 주문호가 1:보통, 3:시장가
             # 5:조건부, 12:최유리, 13:최우선
             # 매수 주문 요청
-            dbgout('### 매수 주문 요청 전 ###')
             ret = cpOrder.BlockRequest()
-            dbgout('### 매수 주문 요청 완료 ###')
-            printlog('최유리 FoK 매수 ->', stock_name, code, buy_qty, '->', ret)
-            dbgout('최유리 FoK 매수 -> ' + stock_name + ' / ' + code + ' / ' + str(buy_qty) + ' / ' + str(ret))
+            printlog('최유리 FoK 매수 요청 ->', stock_name, code, buy_qty, '->', ret)
+            dbgout('최유리 FoK 매수 요청 -> ' + stock_name + ' / ' + code + ' / ' + str(buy_amount) + ' / ' +
+                   str(buy_qty) + ' / ' + str(ret))
             if ret == 4:
                 remain_time = cpStatus.LimitRequestRemainTime
                 printlog('주의: 연속 주문 제한에 걸림. 대기 시간:', remain_time / 1000)
                 time.sleep(remain_time / 1000)
                 return False
             time.sleep(2)
-            printlog('현금주문 가능금액 :', buy_amount)
-            dbgout('code : ' + code + ' / 현금주문 가능금액 : ' + str(buy_amount))
             stock_name, bought_qty = get_stock_balance(code)
             printlog('get_stock_balance :', stock_name, bought_qty)
             dbgout('code : ' + code + ' / get_stock_balance after 주문 후 : ' + stock_name + ' / ' + str(bought_qty))
@@ -317,26 +312,17 @@ if __name__ == '__main__':
             if t_9 < t_now < t_start and soldOut == False:
                 soldOut = True
                 dbgout('장 시작 전 팔지 않은 것이 있으면 모두 팔기')
-                dbgout('before call sell_all()')
                 sell_all()
-                dbgout('after call sell_all()')
             if t_start < t_now < t_sell:  # AM 09:05 ~ PM 03:15 : 매수
                 for sym in symbol_list:
                     dbgout('symbol_list for 문 안 종목명 : ' + sym)
-                    dbgout('매수한 종목명 수 : ' + str(len(bought_list)))
                     if len(bought_list) < target_buy_count:
-                        dbgout('byt_etf 시도 종목 : ' + sym)
-                        dbgout('before call buy_etf(sym) : ' + sym)
                         buy_etf(sym)
-                        dbgout('after call buy_etf(sym) : ' + sym)
                         time.sleep(1)
                 if t_now.minute == 30 and 0 <= t_now.second <= 5:
-                    dbgout('before call get_stock_balance()')
                     get_stock_balance('ALL')
-                    dbgout('after call get_stock_balance()')
                     time.sleep(5)
             if t_sell < t_now < t_exit:  # PM 03:15 ~ PM 03:20 : 일괄 매도
-                dbgout('before call sell_all()')
                 if sell_all() == True:
                     dbgout('`sell_all() returned True -> self-destructed!`')
                     sys.exit(0)
