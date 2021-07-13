@@ -89,7 +89,6 @@ def get_ohlc(code, qty):
 
 def get_stock_balance(code):
     """인자로 받은 종목의 종목명과 수량을 반환한다."""
-    dbgout('### start get_stock_balance and code : ' + code + ' ###')
     cpTradeUtil.TradeInit()
     acc = cpTradeUtil.AccountNumber[0]  # 계좌번호
     accFlag = cpTradeUtil.GoodsList(acc, 1)  # -1:전체, 1:주식, 2:선물/옵션
@@ -98,11 +97,11 @@ def get_stock_balance(code):
     cpBalance.SetInputValue(2, 50)  # 요청 건수(최대 50)
     cpBalance.BlockRequest()
     if code == 'ALL':
-        dbgout('계좌명: ' + str(cpBalance.GetHeaderValue(0)))
-        dbgout('결제잔고수량 : ' + str(cpBalance.GetHeaderValue(1)))
-        dbgout('평가금액: ' + str(cpBalance.GetHeaderValue(3)))
-        dbgout('평가손익: ' + str(cpBalance.GetHeaderValue(4)))
-        dbgout('종목수: ' + str(cpBalance.GetHeaderValue(7)))
+        dbgout('계좌명: ' + str(cpBalance.GetHeaderValue(0)) +
+               ' / 결제잔고수량 : ' + str(cpBalance.GetHeaderValue(1)) +
+               ' / 평가금액: ' + str(cpBalance.GetHeaderValue(3)) +
+               ' / 평가손익: ' + str(cpBalance.GetHeaderValue(4)) +
+               ' / 종목수: ' + str(cpBalance.GetHeaderValue(7)))
     stocks = []
     for i in range(cpBalance.GetHeaderValue(7)):
         stock_code = cpBalance.GetDataValue(12, i)  # 종목코드
@@ -124,7 +123,6 @@ def get_stock_balance(code):
 
 def get_current_cash():
     """증거금 100% 주문 가능 금액을 반환한다."""
-    dbgout('### start get_current_cash ###')
     cpTradeUtil.TradeInit()
     acc = cpTradeUtil.AccountNumber[0]  # 계좌번호
     accFlag = cpTradeUtil.GoodsList(acc, 1)  # -1:전체, 1:주식, 2:선물/옵션
@@ -137,7 +135,6 @@ def get_current_cash():
 def get_target_price(code):
     """매수 목표가를 반환한다."""
     try:
-        dbgout('### start get_target_price and code : ' + code + ' ###')
         time_now = datetime.now()
         str_today = time_now.strftime('%Y%m%d')
         ohlc = get_ohlc(code, 10)
@@ -149,9 +146,7 @@ def get_target_price(code):
             today_open = lastday[3]
         lastday_high = lastday[1]
         lastday_low = lastday[2]
-        dbgout('today_open price : ' + str(today_open) + ' / lastDay_high price : ' + str(lastday_high) +
-               ' / lastDay_low price : ' + str(lastday_low))
-        target_price = today_open + (lastday_high - lastday_low) * 0.1
+        target_price = today_open + (lastday_high - lastday_low) * 0.5
         return target_price
     except Exception as ex:
         dbgout("`get_target_price() -> exception! " + str(ex) + "`")
@@ -161,7 +156,6 @@ def get_target_price(code):
 def get_movingaverage(code, window):
     """인자로 받은 종목에 대한 이동평균가격을 반환한다."""
     try:
-        dbgout('### start get_movingaverage and code and window : ' + code + ' / ' + str(window) + ' ###')
         time_now = datetime.now()
         str_today = time_now.strftime('%Y%m%d')
         ohlc = get_ohlc(code, 20)
@@ -180,10 +174,9 @@ def get_movingaverage(code, window):
 def buy_etf(code):
     """인자로 받은 종목을 최유리 지정가 FOK 조건으로 매수한다."""
     try:
-        dbgout('### start buy_etf and code : ' + code + ' ###')
         global bought_list  # 함수 내에서 값 변경을 하기 위해 global로 지정
         if code in bought_list:  # 매수 완료 종목이면 더 이상 안 사도록 함수 종료
-            dbgout('### already bought code : ' + code + ' ###')
+            printlog('already bought code : ', code)
             return False
         time_now = datetime.now()
         current_price, ask_price, bid_price = get_current_price(code)
@@ -192,13 +185,12 @@ def buy_etf(code):
         ma10_price = get_movingaverage(code, 10)  # 10일 이동평균가
         buy_qty = 0  # 매수할 수량 초기화
         if ask_price > 0:  # 매도호가가 존재하면
-            dbgout('code : ' + code + ' / buy_amount(매매 가능 금액) : ' + str(buy_amount))
             buy_qty = buy_amount // ask_price
-            dbgout('code : ' + code + ' / buy_qty(매수할 수량) : ' + str(buy_qty))
         if buy_qty < 1:
             dbgout('매수할 수량이 없습니다. buy_qty :  ' + str(buy_qty))
             return False
-        dbgout('code : ' + code + ' / current_price(현재가) : ' + str(current_price) +
+        dbgout('code : ' + code +
+               ' / current_price(현재가) : ' + str(current_price) +
                ' / target_price(매수 목표가) : ' + str(target_price) +
                ' / ma5_price(5일 이동평균가) : ' + str(ma5_price) +
                ' / ma10_price(10일 이동평균가) : ' + str(ma10_price))
@@ -223,14 +215,17 @@ def buy_etf(code):
             # 매수 주문 요청
             ret = cpOrder.BlockRequest()
             printlog('최유리 FoK 매수 요청 ->', stock_name, code, buy_qty, '->', ret)
-            dbgout('최유리 FoK 매수 요청 -> ' + stock_name + ' / ' + code + ' / ' + str(buy_amount) + ' / ' +
-                   str(buy_qty) + ' / ' + str(ret))
+            dbgout('최유리 FoK 매수 요청 -> 종목명: ' + stock_name +
+                   ' / 종목코드: ' + code +
+                   ' / 보유한 금액 : ' + str(buy_amount) +
+                   ' / 매수 수량: ' + str(buy_qty) +
+                   ' / 코드: ' + str(ret))
             if ret == 4:
                 remain_time = cpStatus.LimitRequestRemainTime
                 printlog('주의: 연속 주문 제한에 걸림. 대기 시간:', remain_time / 1000)
                 time.sleep(remain_time / 1000)
                 return False
-            time.sleep(2)
+            time.sleep(10)
             stock_name, bought_qty = get_stock_balance(code)
             printlog('get_stock_balance :', stock_name, bought_qty)
             dbgout('code : ' + code + ' / get_stock_balance after 주문 후 : ' + stock_name + ' / ' + str(bought_qty))
@@ -245,7 +240,6 @@ def buy_etf(code):
 def sell_all():
     """보유한 모든 종목을 최유리 지정가 IOC 조건으로 매도한다."""
     try:
-        dbgout('### start sell_all() ###')
         cpTradeUtil.TradeInit()
         acc = cpTradeUtil.AccountNumber[0]  # 계좌번호
         accFlag = cpTradeUtil.GoodsList(acc, 1)  # -1:전체, 1:주식, 2:선물/옵션
