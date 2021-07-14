@@ -273,9 +273,9 @@ if __name__ == '__main__':
                        'A117680', 'A139240', 'A160580']
         # KODEX 건설, KODEX 게임산업, TIGER 여행레저
         # KODEX 철강, TIGER 200 철강소재, TIGER 구리실물
-        bought_list = ['A160580', 'A117680', 'A139240']  # 매수 완료된 종목 리스트
-        target_buy_count = 3  # 매수할 종목 수
-        buy_percent = 0.3  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
+        bought_list = []  # 매수 완료된 종목 리스트
+        target_buy_count = 2  # 매수할 종목 수
+        buy_percent = 0.5  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
         printlog('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
         stocks = get_stock_balance('ALL')  # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())  # 100% 증거금 주문 가능 금액 조회
