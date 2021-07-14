@@ -189,11 +189,6 @@ def buy_etf(code):
         if buy_qty < 1:
             dbgout('매수할 수량이 없습니다. buy_qty :  ' + str(buy_qty))
             return False
-        dbgout('code : ' + code +
-               ' / current_price(현재가) : ' + str(current_price) +
-               ' / target_price(매수 목표가) : ' + str(target_price) +
-               ' / ma5_price(5일 이동평균가) : ' + str(ma5_price) +
-               ' / ma10_price(10일 이동평균가) : ' + str(ma10_price))
         if current_price > target_price and current_price > ma5_price \
                 and current_price > ma10_price:
             stock_name, stock_qty = get_stock_balance(code)  # 종목명과 보유수량 조회
@@ -278,7 +273,7 @@ if __name__ == '__main__':
                        'A117680', 'A139240', 'A160580']
         # KODEX 건설, KODEX 게임산업, TIGER 여행레저
         # KODEX 철강, TIGER 200 철강소재, TIGER 구리실물
-        bought_list = []  # 매수 완료된 종목 리스트
+        bought_list = ['A160580', 'A117680', 'A139240']  # 매수 완료된 종목 리스트
         target_buy_count = 3  # 매수할 종목 수
         buy_percent = 0.3  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
         printlog('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
@@ -310,10 +305,9 @@ if __name__ == '__main__':
                 sell_all()
             if t_start < t_now < t_sell:  # AM 09:05 ~ PM 03:15 : 매수
                 for sym in symbol_list:
-                    dbgout('symbol_list for 문 안 종목명 : ' + sym)
                     if len(bought_list) < target_buy_count:
                         buy_etf(sym)
-                        time.sleep(1)
+                        time.sleep(5)
                 if t_now.minute == 30 and 0 <= t_now.second <= 5:
                     get_stock_balance('ALL')
                     time.sleep(5)
