@@ -109,7 +109,7 @@ def get_stock_balance(code):
         stock_qty = cpBalance.GetDataValue(15, i)  # 수량
         if code == 'ALL':
             dbgout(str(i + 1) + ' ' + stock_code + '(' + stock_name + ')'
-                   + ':' + str(stock_qty))
+                   + ' : ' + str(stock_qty))
             stocks.append({'code': stock_code, 'name': stock_name,
                            'qty': stock_qty})
         if stock_code == code:
@@ -280,9 +280,9 @@ if __name__ == '__main__':
         stocks = get_stock_balance('ALL')  # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())  # 100% 증거금 주문 가능 금액 조회
         buy_amount = total_cash * buy_percent  # 종목별 주문 금액 계산
-        printlog('100% 증거금 주문 가능 금액 :', total_cash)
-        printlog('종목별 주문 비율 :', buy_percent)
-        printlog('종목별 주문 금액 :', buy_amount)
+        printlog('100% 증거금 주문 가능 금액 : ', total_cash)
+        printlog('종목별 주문 비율 : ', buy_percent)
+        printlog('종목별 주문 금액 : ', buy_amount)
         dbgout('100% 증거금 주문 가능 금액 : ' + str(total_cash) +
                '/ 종목별 주문 금액 : ' + str(buy_amount))
         printlog('시작 시간 :', datetime.now().strftime('%m/%d %H:%M:%S'))
