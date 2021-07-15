@@ -273,7 +273,7 @@ if __name__ == '__main__':
                        'A117680', 'A139240', 'A160580']
         # KODEX 건설, KODEX 게임산업, TIGER 여행레저
         # KODEX 철강, TIGER 200 철강소재, TIGER 구리실물
-        bought_list = []  # 매수 완료된 종목 리스트
+        bought_list = ['A117680']  # 매수 완료된 종목 리스트
         target_buy_count = 2  # 매수할 종목 수
         buy_percent = 0.5  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
         printlog('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
@@ -284,7 +284,9 @@ if __name__ == '__main__':
         printlog('종목별 주문 비율 : ', buy_percent)
         printlog('종목별 주문 금액 : ', buy_amount)
         dbgout('100% 증거금 주문 가능 금액 : ' + str(total_cash) +
-               '/ 종목별 주문 금액 : ' + str(buy_amount))
+               ' / 매수할 종목 수 : ' + str(target_buy_count) +
+               ' / 전체 가용 금액 중 종목별 비중 : ' + str(buy_percent) +
+               ' / 종목별 주문 금액 : ' + str(buy_amount))
         printlog('시작 시간 :', datetime.now().strftime('%m/%d %H:%M:%S'))
         soldOut = False
 
