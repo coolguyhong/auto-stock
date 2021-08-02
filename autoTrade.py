@@ -268,12 +268,12 @@ def sell_all():
 
 if __name__ == '__main__':
     try:
-        symbol_list = ['A122630', 'A379810', 'A228800',
-                       'A138910', 'A117680', 'A252670',
-                       'A253230', 'A252710', 'A252420']
-        # KODEX 레버리지, KODEX 미국나스닥100TR, TIGER 여행레저
-        # KODEX 구리선물(H), KODEX 철강, KODEX 200선물인버스2X
-        # KOSEF 200선물인버스2X, TIGER 200선물인버스2X, KBSTAR 200선물인버스2X
+        symbol_list = ['A122630', 'A233740', 'A123320', 'A233160',
+                       'A160580', 'A139240', 'A138910', 'A117680',
+                       'A123310', 'A252710', 'A114800', 'A252670']
+        # KODEX 레버리지, KODEX 코스닥150 레버리지, TIGER 레버리지, TIGER 코스닥150 레버리지
+        # TIGER 구리실물, TIGER 200 철강소재, KODEX 구리선물(H), KODEX 철강
+        # TIGER 인버스, TIGER 200선물인버스2X, KODEX 인버스, KODEX 200선물인버스2X
         bought_list = []  # 매수 완료된 종목 리스트
         target_buy_count = 3  # 매수할 종목 수
         buy_percent = 0.33  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
