@@ -268,10 +268,10 @@ def sell_all():
 
 if __name__ == '__main__':
     try:
-        symbol_list = ['A122630', 'A233740', 'A123320', 'A233160',
+        symbol_list = ['A253150', 'A233740', 'A227830', 'A233160',
                        'A160580', 'A139240', 'A138910', 'A117680',
                        'A123310', 'A252710', 'A114800', 'A252670']
-        # KODEX 레버리지, KODEX 코스닥150 레버리지, TIGER 레버리지, TIGER 코스닥150 레버리지
+        # ARIRANG 200선물레버리지, KODEX 코스닥150 레버리지, ARIRANG 코스피, TIGER 코스닥150 레버리지
         # TIGER 구리실물, TIGER 200 철강소재, KODEX 구리선물(H), KODEX 철강
         # TIGER 인버스, TIGER 200선물인버스2X, KODEX 인버스, KODEX 200선물인버스2X
         bought_list = []  # 매수 완료된 종목 리스트
