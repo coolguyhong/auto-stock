@@ -219,7 +219,7 @@ def buy_etf(code):
                 printlog('주의: 연속 주문 제한에 걸림. 대기 시간:', remain_time / 1000)
                 time.sleep(remain_time / 1000)
                 return False
-            time.sleep(10)
+            time.sleep(2)
             stock_name, bought_qty = get_stock_balance(code)
             printlog('get_stock_balance :', stock_name, bought_qty)
             dbgout('code : ' + code + ' / get_stock_balance after 주문 후 : ' + stock_name + ' / ' + str(bought_qty))
@@ -310,7 +310,7 @@ if __name__ == '__main__':
                 for sym in symbol_list:
                     if len(bought_list) < target_buy_count:
                         buy_etf(sym)
-                        time.sleep(5)
+                        time.sleep(1)
                 if t_now.minute == 30:
                     get_stock_balance('ALL')
                     time.sleep(5)
