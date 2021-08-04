@@ -100,8 +100,9 @@ def get_stock_balance(code):
         dbgout('계좌명: ' + str(cpBalance.GetHeaderValue(0)) +
                ' / 결제잔고수량 : ' + str(cpBalance.GetHeaderValue(1)) +
                ' / 평가금액: ' + str(cpBalance.GetHeaderValue(3)) +
-               ' / 평가손익: ' + str(cpBalance.GetHeaderValue(4)) +
-               ' / 종목수: ' + str(cpBalance.GetHeaderValue(7)))
+               '원 / 평가손익: ' + str(cpBalance.GetHeaderValue(4)) +
+               '원 / 종목수: ' + str(cpBalance.GetHeaderValue(7)) +
+               ' 개')
     stocks = []
     for i in range(cpBalance.GetHeaderValue(7)):
         stock_code = cpBalance.GetDataValue(12, i)  # 종목코드
@@ -109,7 +110,7 @@ def get_stock_balance(code):
         stock_qty = cpBalance.GetDataValue(15, i)  # 수량
         if code == 'ALL':
             dbgout(str(i + 1) + ' ' + stock_code + '(' + stock_name + ')'
-                   + ' : ' + str(stock_qty))
+                   + ' : ' + str(stock_qty) + 'EA')
             stocks.append({'code': stock_code, 'name': stock_name,
                            'qty': stock_qty})
         if stock_code == code:
@@ -212,8 +213,8 @@ def buy_etf(code):
             dbgout('최유리 FoK 매수 요청 -> 종목명: ' + stock_name +
                    ' / 종목코드: ' + code +
                    ' / 보유한 금액 : ' + str(buy_amount) +
-                   ' / 매수 수량: ' + str(buy_qty) +
-                   ' / 코드: ' + str(ret))
+                   '원 / 매수 수량: ' + str(buy_qty) +
+                   'EA / 코드: ' + str(ret))
             if ret == 4:
                 remain_time = cpStatus.LimitRequestRemainTime
                 printlog('주의: 연속 주문 제한에 걸림. 대기 시간:', remain_time / 1000)
@@ -222,7 +223,7 @@ def buy_etf(code):
             time.sleep(2)
             stock_name, bought_qty = get_stock_balance(code)
             printlog('get_stock_balance :', stock_name, bought_qty)
-            dbgout('code : ' + code + ' / get_stock_balance after 주문 후 : ' + stock_name + ' / ' + str(bought_qty))
+            dbgout('code : ' + code + ' / get_stock_balance after 주문 후 : ' + stock_name + ' / ' + str(bought_qty) + 'EA')
             if bought_qty > 0:
                 bought_list.append(code)
                 dbgout("`buy_etf(" + str(stock_name) + ' : ' + str(code) +
