@@ -100,8 +100,8 @@ def get_stock_balance(code):
         dbgout('계좌명: ' + str(cpBalance.GetHeaderValue(0)) +
                ' / 결제잔고수량 : ' + str(cpBalance.GetHeaderValue(1)) +
                ' / 평가금액: ' + str(cpBalance.GetHeaderValue(3)) +
-               '원 / 평가손익: ' + str(cpBalance.GetHeaderValue(4)) +
-               '원 / 종목수: ' + str(cpBalance.GetHeaderValue(7)) +
+               ' 원 / 평가손익: ' + str(cpBalance.GetHeaderValue(4)) +
+               ' 원 / 종목수: ' + str(cpBalance.GetHeaderValue(7)) +
                ' 개')
     stocks = []
     for i in range(cpBalance.GetHeaderValue(7)):
@@ -213,7 +213,7 @@ def buy_etf(code):
             dbgout('최유리 FoK 매수 요청 -> 종목명: ' + stock_name +
                    ' / 종목코드: ' + code +
                    ' / 보유한 금액 : ' + str(buy_amount) +
-                   '원 / 매수 수량: ' + str(buy_qty) +
+                   ' 원 / 매수 수량: ' + str(buy_qty) +
                    'EA / 코드: ' + str(ret))
             if ret == 4:
                 remain_time = cpStatus.LimitRequestRemainTime
@@ -288,9 +288,9 @@ if __name__ == '__main__':
         printlog('종목별 주문 비율 : ', buy_percent)
         printlog('종목별 주문 금액 : ', buy_amount)
         dbgout('100% 증거금 주문 가능 금액 : ' + str(total_cash) +
-               ' / 매수할 종목 수 : ' + str(target_buy_count) +
-               ' / 전체 가용 금액 중 종목별 비중 : ' + str(buy_percent) +
-               ' / 종목별 주문 금액 : ' + str(buy_amount))
+               ' 원 / 매수할 종목 수 : ' + str(target_buy_count) +
+               ' 개 / 전체 가용 금액 중 종목별 비중 : ' + str(buy_percent) +
+               ' / 종목별 주문 금액 : ' + str(buy_amount) + ' 원')
         printlog('시작 시간 :', datetime.now().strftime('%m/%d %H:%M:%S'))
         soldOut = False
 
