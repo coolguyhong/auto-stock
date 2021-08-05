@@ -147,7 +147,7 @@ def get_target_price(code):
             today_open = lastday[3]
         lastday_high = lastday[1]
         lastday_low = lastday[2]
-        target_price = today_open + (lastday_high - lastday_low) * 0.5
+        target_price = today_open + (lastday_high - lastday_low) * 0.3
         return target_price
     except Exception as ex:
         dbgout("`get_target_price() -> exception! " + str(ex) + "`")
@@ -159,7 +159,7 @@ def get_movingaverage(code, window):
     try:
         time_now = datetime.now()
         str_today = time_now.strftime('%Y%m%d')
-        ohlc = get_ohlc(code, 20)
+        ohlc = get_ohlc(code, 40)
         if str_today == str(ohlc.iloc[0].name):
             lastday = ohlc.iloc[1].name
         else:
@@ -279,7 +279,7 @@ if __name__ == '__main__':
                        'A228800']
         bought_list = []  # 매수 완료된 종목 리스트
         target_buy_count = 4  # 매수할 종목 수
-        buy_percent = 0.25  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
+        buy_percent = 0.24  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
         printlog('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
         stocks = get_stock_balance('ALL')  # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())  # 100% 증거금 주문 가능 금액 조회
