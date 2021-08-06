@@ -187,7 +187,7 @@ def buy_etf(code):
         if ask_price > 0:  # 매도호가가 존재하면
             buy_qty = buy_amount // ask_price
         if buy_qty < 1:
-            dbgout('매수할 수량이 없습니다. buy_qty :  ' + str(buy_qty))
+            dbgout('종목코드: ' + code + ' / 매수할 수량이 없습니다. buy_qty :  ' + str(buy_qty))
             return False
         if current_price > target_price and current_price > ma5_price \
                 and current_price > ma10_price:
