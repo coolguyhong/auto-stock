@@ -205,8 +205,7 @@ def buy_etf(code):
             cpOrder.SetInputValue(3, code)  # 종목코드
             cpOrder.SetInputValue(4, buy_qty)  # 매수할 수량
             cpOrder.SetInputValue(7, "2")  # 주문조건 0:기본, 1:IOC, 2:FOK
-            cpOrder.SetInputValue(8, "12")  # 주문호가 1:보통, 3:시장가
-            # 5:조건부, 12:최유리, 13:최우선
+            cpOrder.SetInputValue(8, "12")  # 주문호가 1:보통, 3:시장가, 5:조건부, 12:최유리, 13:최우선
             # 매수 주문 요청
             ret = cpOrder.BlockRequest()
             printlog('최유리 FoK 매수 요청 ->', stock_name, code, buy_qty, '->', ret)
@@ -221,6 +220,13 @@ def buy_etf(code):
                 time.sleep(remain_time / 1000)
                 return False
             time.sleep(2)
+            # 매수 주문 후 상태 확인 코드
+            rqStatus = cpOrder.GetDibStatus()
+            errMsg = cpOrder.GetDibMsg1()
+            if rqStatus != 0:
+                printlog('주문 실패: ', rqStatus, errMsg)
+                dbgout('주문 실패 상태 코드 : ' + rqStatus + ' / 에러메시지 : ' + errMsg)
+                return False
             stock_name, bought_qty = get_stock_balance(code)
             printlog('get_stock_balance :', stock_name, bought_qty)
             dbgout('code : ' + code + ' / get_stock_balance after 주문 후 : ' + stock_name + ' / ' + str(bought_qty) + 'EA')
