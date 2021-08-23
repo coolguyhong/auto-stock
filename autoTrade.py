@@ -194,6 +194,8 @@ def buy_etf(code):
             stock_name, stock_qty = get_stock_balance(code)  # 종목명과 보유수량 조회
             dbgout(stock_name + '(' + str(code) + ') ' + str(buy_qty) +
                    'EA : ' + str(current_price) + ' meets the buy condition!`')
+            dbgout('target_price: ' + str(target_price) + ' / ma5_price: ' + str(ma5_price) +
+                   ' / ma10_price: ' + str(ma10_price))
             cpTradeUtil.TradeInit()
             acc = cpTradeUtil.AccountNumber[0]  # 계좌번호
             dbgout('### 계좌번호: ' + acc + ' ###')
