@@ -225,7 +225,7 @@ def buy_etf(code):
             errMsg = cpOrder.GetDibMsg1()
             if rqStatus != 0:
                 printlog('주문 실패: ', rqStatus, errMsg)
-                dbgout('주문 실패 상태 코드 : ' + rqStatus + ' / 에러메시지 : ' + errMsg)
+                dbgout('주문 실패 상태 코드 : ' + str(rqStatus) + ' / 에러메시지 : ' + str(errMsg))
                 return False
             stock_name, bought_qty = get_stock_balance(code)
             printlog('get_stock_balance :', stock_name, bought_qty)
