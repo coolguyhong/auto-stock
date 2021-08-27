@@ -147,7 +147,7 @@ def get_target_price(code):
             today_open = lastday[3]
         lastday_high = lastday[1]
         lastday_low = lastday[2]
-        target_price = today_open + (lastday_high - lastday_low) * 0.25
+        target_price = today_open + (lastday_high - lastday_low) * 0.2
         return target_price
     except Exception as ex:
         dbgout("`get_target_price() -> exception! " + str(ex) + "`")
@@ -277,14 +277,13 @@ def sell_all():
 
 if __name__ == '__main__':
     try:
-        symbol_list = ['A379810', 'A367380', 'A368590', 'A360750',
-                       'A360200', 'A379800', 'A394660', 'A381180', 'A381170',
-                       'A394670', 'A228800', 'A388280', 'A305720',
-                       'A228810', 'A117680', 'A305540', 'A069500',
+        symbol_list = ['A379810', 'A367380', 'A368590', 'A360750', 'A360200',
+                       'A379800', 'A394660', 'A381180', 'A381170', 'A394670',
+                       'A228800', 'A388280', 'A305720', 'A305540', 'A069500',
                        'A105190', 'A102110', 'A278540', 'A229200', 'A232080']
         bought_list = []  # 매수 완료된 종목 리스트
         target_buy_count = 4  # 매수할 종목 수
-        buy_percent = 0.24  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
+        buy_percent = 0.25  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
         printlog('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
         stocks = get_stock_balance('ALL')  # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())  # 100% 증거금 주문 가능 금액 조회
