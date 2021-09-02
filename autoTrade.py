@@ -206,12 +206,12 @@ def buy_etf(code):
             cpOrder.SetInputValue(2, accFlag[0])  # 상품구분 - 주식 상품 중 첫번째
             cpOrder.SetInputValue(3, code)  # 종목코드
             cpOrder.SetInputValue(4, buy_qty)  # 매수할 수량
-            cpOrder.SetInputValue(7, "2")  # 주문조건 0:기본, 1:IOC, 2:FOK
-            cpOrder.SetInputValue(8, "12")  # 주문호가 1:보통, 3:시장가, 5:조건부, 12:최유리, 13:최우선
+            cpOrder.SetInputValue(7, "0")  # 주문조건 0:기본, 1:IOC, 2:FOK
+            cpOrder.SetInputValue(8, "3")  # 주문호가 1:보통, 3:시장가, 5:조건부, 12:최유리, 13:최우선
             # 매수 주문 요청
             ret = cpOrder.BlockRequest()
-            printlog('최유리 FoK 매수 요청 ->', stock_name, code, buy_qty, '->', ret)
-            dbgout('최유리 FoK 매수 요청 -> 종목명: ' + stock_name +
+            printlog('시장가 기본 매수 요청 ->', stock_name, code, buy_qty, '->', ret)
+            dbgout('시장가 기본 매수 요청 -> 종목명: ' + stock_name +
                    ' / 종목코드: ' + code +
                    ' / 보유한 금액 : ' + str(buy_amount) +
                    ' 원 / 매수 수량: ' + str(buy_qty) +
