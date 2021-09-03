@@ -67,7 +67,7 @@ def get_current_price(code):
 
 
 def get_ohlc(code, qty):
-    """인자로 받은 종목의 OHLC 가격 정보를 qty 개수만큼 반환한다."""
+    """인자로 받은 종목의 OHLC 가격 정보를 qty 기간 동안 만큼의 개수를 반환한다."""
     cpOhlc.SetInputValue(0, code)  # 종목코드
     cpOhlc.SetInputValue(1, ord('2'))  # 1:기간, 2:개수
     cpOhlc.SetInputValue(4, qty)  # 요청개수
@@ -206,12 +206,12 @@ def buy_etf(code):
             cpOrder.SetInputValue(2, accFlag[0])  # 상품구분 - 주식 상품 중 첫번째
             cpOrder.SetInputValue(3, code)  # 종목코드
             cpOrder.SetInputValue(4, buy_qty)  # 매수할 수량
-            cpOrder.SetInputValue(7, "0")  # 주문조건 0:기본, 1:IOC, 2:FOK
-            cpOrder.SetInputValue(8, "3")  # 주문호가 1:보통, 3:시장가, 5:조건부, 12:최유리, 13:최우선
+            cpOrder.SetInputValue(7, "2")  # 주문조건 0:기본, 1:IOC, 2:FOK
+            cpOrder.SetInputValue(8, "12")  # 주문호가 01:보통, 03:시장가, 05:조건부, 12:최유리, 13:최우선
             # 매수 주문 요청
             ret = cpOrder.BlockRequest()
-            printlog('시장가 기본 매수 요청 ->', stock_name, code, buy_qty, '->', ret)
-            dbgout('시장가 기본 매수 요청 -> 종목명: ' + stock_name +
+            printlog('최유리 FoK 매수 요청 ->', stock_name, code, buy_qty, '->', ret)
+            dbgout('최유리 FoK 매수 요청 -> 종목명: ' + stock_name +
                    ' / 종목코드: ' + code +
                    ' / 보유한 금액 : ' + str(buy_amount) +
                    ' 원 / 매수 수량: ' + str(buy_qty) +
