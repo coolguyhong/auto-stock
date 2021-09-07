@@ -269,6 +269,12 @@ def sell_all():
                     if ret == 4:
                         remain_time = cpStatus.LimitRequestRemainTime
                         printlog('주의: 연속 주문 제한, 대기시간:', remain_time / 1000)
+                    # 매수 주문 후 상태 확인 코드
+                    rqStatus = cpOrder.GetDibStatus()
+                    errMsg = cpOrder.GetDibMsg1()
+                    if rqStatus != 0:
+                        printlog('주문 실패: ', rqStatus, errMsg)
+                        dbgout('주문 실패 상태 코드 : ' + str(rqStatus) + ' / 에러메시지 : ' + str(errMsg))
                 time.sleep(1)
             time.sleep(30)
     except Exception as ex:
