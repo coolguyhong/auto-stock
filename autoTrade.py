@@ -327,7 +327,7 @@ if __name__ == '__main__':
                     if len(bought_list) < target_buy_count:
                         buy_etf(sym)
                         time.sleep(1)
-                if t_now.minute == 30 and 0 <= t_now.second <= 20:
+                if t_now.minute == 30:
                     get_stock_balance('ALL')
                     time.sleep(5)
             if t_sell < t_now < t_exit:  # PM 03:15 ~ PM 03:20 : 일괄 매도
