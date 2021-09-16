@@ -183,6 +183,8 @@ def buy_etf(code):
         target_price = get_target_price(code)  # 매수 목표가
         ma5_price = get_movingaverage(code, 5)  # 5일 이동평균가
         ma10_price = get_movingaverage(code, 10)  # 10일 이동평균가
+        dbgout('first input target_price: ' + str(target_price) + ' / ma5_price: ' + str(ma5_price) +
+               ' / ma10_price: ' + str(ma10_price))
         buy_qty = 0  # 매수할 수량 초기화
         if ask_price > 0:  # 매도호가가 존재하면
             buy_qty = buy_amount // ask_price
@@ -194,7 +196,7 @@ def buy_etf(code):
             stock_name, stock_qty = get_stock_balance(code)  # 종목명과 보유수량 조회
             dbgout(stock_name + '(' + str(code) + ') ' + str(buy_qty) +
                    'EA : ' + str(current_price) + ' meets the buy condition!`')
-            dbgout('target_price: ' + str(target_price) + ' / ma5_price: ' + str(ma5_price) +
+            dbgout('second input target_price: ' + str(target_price) + ' / ma5_price: ' + str(ma5_price) +
                    ' / ma10_price: ' + str(ma10_price))
             cpTradeUtil.TradeInit()
             acc = cpTradeUtil.AccountNumber[0]  # 계좌번호
@@ -206,8 +208,8 @@ def buy_etf(code):
             cpOrder.SetInputValue(2, accFlag[0])  # 상품구분 - 주식 상품 중 첫번째
             cpOrder.SetInputValue(3, code)  # 종목코드
             cpOrder.SetInputValue(4, buy_qty)  # 매수할 수량
-            cpOrder.SetInputValue(7, "2")  # 주문조건 0:기본, 1:IOC, 2:FOK
-            cpOrder.SetInputValue(8, "12")  # 주문호가 01:보통, 03:시장가, 05:조건부, 12:최유리, 13:최우선
+            cpOrder.SetInputValue(7, "0")  # 주문조건 0:기본, 1:IOC, 2:FOK
+            cpOrder.SetInputValue(8, "03")  # 주문호가 01:보통, 03:시장가, 05:조건부, 12:최유리, 13:최우선
             # 매수 주문 요청
             ret = cpOrder.BlockRequest()
             printlog('최유리 FoK 매수 요청 ->', stock_name, code, buy_qty, '->', ret)
