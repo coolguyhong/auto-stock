@@ -183,7 +183,10 @@ def buy_etf(code):
         target_price = get_target_price(code)  # 매수 목표가
         ma5_price = get_movingaverage(code, 5)  # 5일 이동평균가
         ma10_price = get_movingaverage(code, 10)  # 10일 이동평균가
-        dbgout('first input target_price: ' + str(target_price) + ' / ma5_price: ' + str(ma5_price) +
+        dbgout('stock_code: (' + str(code) + ')' +
+               ' / current_price: ' + str(current_price) +
+               ' / target_price: ' + str(target_price) +
+               ' / ma5_price: ' + str(ma5_price) +
                ' / ma10_price: ' + str(ma10_price))
         buy_qty = 0  # 매수할 수량 초기화
         if ask_price > 0:  # 매도호가가 존재하면
@@ -196,7 +199,10 @@ def buy_etf(code):
             stock_name, stock_qty = get_stock_balance(code)  # 종목명과 보유수량 조회
             dbgout(stock_name + '(' + str(code) + ') ' + str(buy_qty) +
                    'EA : ' + str(current_price) + ' meets the buy condition!`')
-            dbgout('second input target_price: ' + str(target_price) + ' / ma5_price: ' + str(ma5_price) +
+            dbgout('stock_name: ' + stock_name + '(' + str(code) + ')'
+                   ' / current_price: ' + str(current_price) +
+                   ' / target_price: ' + str(target_price) +
+                   ' / ma5_price: ' + str(ma5_price) +
                    ' / ma10_price: ' + str(ma10_price))
             cpTradeUtil.TradeInit()
             acc = cpTradeUtil.AccountNumber[0]  # 계좌번호
@@ -212,8 +218,8 @@ def buy_etf(code):
             cpOrder.SetInputValue(8, "03")  # 주문호가 01:보통, 03:시장가, 05:조건부, 12:최유리, 13:최우선
             # 매수 주문 요청
             ret = cpOrder.BlockRequest()
-            printlog('최유리 FoK 매수 요청 ->', stock_name, code, buy_qty, '->', ret)
-            dbgout('최유리 FoK 매수 요청 -> 종목명: ' + stock_name +
+            printlog('시장가 기본 매수 요청 ->', stock_name, code, buy_qty, '->', ret)
+            dbgout('시장기 기본 매수 요청 -> 종목명: ' + stock_name +
                    ' / 종목코드: ' + code +
                    ' / 보유한 금액 : ' + str(buy_amount) +
                    ' 원 / 매수 수량: ' + str(buy_qty) +
