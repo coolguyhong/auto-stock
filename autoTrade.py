@@ -183,11 +183,6 @@ def buy_etf(code):
         target_price = get_target_price(code)  # 매수 목표가
         ma5_price = get_movingaverage(code, 5)  # 5일 이동평균가
         ma10_price = get_movingaverage(code, 10)  # 10일 이동평균가
-        dbgout('stock_code: (' + str(code) + ')' +
-               ' / current_price: ' + str(current_price) +
-               ' / target_price: ' + str(target_price) +
-               ' / ma5_price: ' + str(ma5_price) +
-               ' / ma10_price: ' + str(ma10_price))
         buy_qty = 0  # 매수할 수량 초기화
         if ask_price > 0:  # 매도호가가 존재하면
             buy_qty = buy_amount // ask_price
@@ -291,13 +286,18 @@ def sell_all():
 
 if __name__ == '__main__':
     try:
-        symbol_list = ['A133690', 'A367380', 'A368590',
-                       'A379810', 'A225040', 'A360750',
-                       'A360200', 'A379780', 'A143850' 
-                       'A219480', 'A379800', 'A122630',
-                       'A267770', 'A069500', 'A102110',
-                       'A148020', 'A105190', 'A233740',
-                       'A233160', 'A229200', 'A232080']
+        symbol_list = [
+                    'A133690', 'A367380', 'A368590', 'A379810', # 미국나스닥100
+                    'A225040', 'A360750', 'A360200', 'A379780',
+                    'A143850', 'A219480', 'A379800', # 미국S&P500
+                    'A225030', # 미국S&P500선물인버스
+                    'A122630', 'A123320', 'A267770', 'A069500',
+                    'A102110', 'A148020', 'A105190', # 코스피200
+                    'A252670', 'A252710', 'A252420', 'A253230',
+                    'A253160', 'A114800', 'A123310', # 코스피200인버스
+                    'A233740', 'A233160', 'A278240', 'A229200', 'A232080', # 코스닥150
+                    'A251340', 'A250780' # 코스닥150선물인버스
+                    ]
         bought_list = []  # 매수 완료된 종목 리스트
         target_buy_count = 4  # 매수할 종목 수
         buy_percent = 0.21  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
