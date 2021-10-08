@@ -269,15 +269,23 @@ def sell_all():
                     ret = cpOrder.BlockRequest()
                     printlog('최유리 IOC 매도', s['code'], s['name'], s['qty'],
                              '-> cpOrder.BlockRequest() -> returned', ret)
+                    dbgout('최유리 IOC 매도 요청 -> 종목명: ' + s['name'] +
+                           ' / 종목코드: ' + s['code'] +
+                           ' / 매도 수량: ' + s['qty'] +
+                           'EA / 코드: ' + str(ret))
                     if ret == 4:
                         remain_time = cpStatus.LimitRequestRemainTime
                         printlog('주의: 연속 주문 제한, 대기시간:', remain_time / 1000)
+                    time.sleep(1)
                     # 매수 주문 후 상태 확인 코드
                     rqStatus = cpOrder.GetDibStatus()
                     errMsg = cpOrder.GetDibMsg1()
                     if rqStatus != 0:
                         printlog('주문 실패: ', rqStatus, errMsg)
                         dbgout('주문 실패 상태 코드 : ' + str(rqStatus) + ' / 에러메시지 : ' + str(errMsg))
+                    stock_name, sell_qty = get_stock_balance(s['code'])
+                    printlog('get_stock_balance :', stock_name, sell_qty)
+                    dbgout('code : ' + s['code'] + ' / get_stock_balance after 주문 후 : ' + stock_name + ' / ' + str(sell_qty) + 'EA')
                 time.sleep(1)
             time.sleep(30)
     except Exception as ex:
