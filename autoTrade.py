@@ -276,16 +276,12 @@ def sell_all():
                     if ret == 4:
                         remain_time = cpStatus.LimitRequestRemainTime
                         printlog('주의: 연속 주문 제한, 대기시간:', remain_time / 1000)
-                    time.sleep(1)
                     # 매수 주문 후 상태 확인 코드
                     rqStatus = cpOrder.GetDibStatus()
                     errMsg = cpOrder.GetDibMsg1()
                     if rqStatus != 0:
                         printlog('주문 실패: ', rqStatus, errMsg)
                         dbgout('주문 실패 상태 코드 : ' + str(rqStatus) + ' / 에러메시지 : ' + str(errMsg))
-                    stock_name, sell_qty = get_stock_balance(s['code'])
-                    printlog('get_stock_balance :', stock_name, sell_qty)
-                    dbgout('code : ' + s['code'] + ' / get_stock_balance after 주문 후 : ' + stock_name + ' / ' + str(sell_qty) + 'EA')
                 time.sleep(1)
             time.sleep(30)
     except Exception as ex:
@@ -295,10 +291,11 @@ def sell_all():
 if __name__ == '__main__':
     try:
         symbol_list = [
-                    'A133690', 'A367380', 'A368590', 'A379810', # 미국나스닥100
                     'A225040', 'A360750', 'A360200', 'A379780',
-                    'A143850', 'A219480', 'A379800', # 미국S&P500
-                    'A225030', # 미국S&P500선물인버스
+                    'A143850', 'A219480', 'A379800',  # 미국S&P500
+                    'A225030',  # 미국S&P500선물인버스
+                    'A133690', 'A367380', 'A368590', 'A379810', # 미국나스닥100
+                    'A381180', # 미국필라델피아반도체
                     'A122630', 'A123320', 'A267770', 'A069500',
                     'A102110', 'A148020', 'A105190', # 코스피200
                     'A252670', 'A252710', 'A252420', 'A253230',
@@ -308,7 +305,7 @@ if __name__ == '__main__':
                     ]
         bought_list = []  # 매수 완료된 종목 리스트
         target_buy_count = 4  # 매수할 종목 수
-        buy_percent = 0.21  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
+        buy_percent = 0.20  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
         printlog('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
         stocks = get_stock_balance('ALL')  # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())  # 100% 증거금 주문 가능 금액 조회
