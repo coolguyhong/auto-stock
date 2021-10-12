@@ -271,7 +271,7 @@ def sell_all():
                              '-> cpOrder.BlockRequest() -> returned', ret)
                     dbgout('최유리 IOC 매도 요청 -> 종목명: ' + s['name'] +
                            ' / 종목코드: ' + s['code'] +
-                           ' / 매도 수량: ' + s['qty'] +
+                           ' / 매도 수량: ' + str(s['qty']) +
                            'EA / 코드: ' + str(ret))
                     if ret == 4:
                         remain_time = cpStatus.LimitRequestRemainTime
@@ -296,6 +296,7 @@ if __name__ == '__main__':
                     'A225030',  # 미국S&P500선물인버스
                     'A133690', 'A367380', 'A368590', 'A379810', # 미국나스닥100
                     'A381180', # 미국필라델피아반도체
+                    'A261220', 'A130680', # WTI원유선물
                     'A122630', 'A123320', 'A267770', 'A069500',
                     'A102110', 'A148020', 'A105190', # 코스피200
                     'A252670', 'A252710', 'A252420', 'A253230',
