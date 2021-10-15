@@ -194,9 +194,9 @@ def buy_etf(code):
         if current_price > target_price and current_price > ma5_price \
                 and current_price > ma10_price:
             stock_name, stock_qty = get_stock_balance(code)  # 종목명과 보유수량 조회
-            dbgout(stock_name + '(' + str(code) + ') ' + str(buy_qty) +
+            dbgout(stock_name + '(' + code + ') ' + str(buy_qty) +
                    'EA : ' + str(current_price) + ' meets the buy condition!`')
-            dbgout('stock_name: ' + stock_name + '(' + str(code) + ')'
+            dbgout('stock_name: ' + stock_name + '(' + code + ')'
                    ' / current_price: ' + str(current_price) +
                    ' / target_price: ' + str(target_price) +
                    ' / ma5_price: ' + str(ma5_price) +
@@ -239,10 +239,10 @@ def buy_etf(code):
             dbgout('code : ' + code + ' / get_stock_balance after 주문 후 : ' + stock_name + ' / ' + str(bought_qty) + 'EA')
             if bought_qty > 0:
                 bought_list.append(code)
-                dbgout("`buy_etf(" + str(stock_name) + ' : ' + str(code) +
+                dbgout("`buy_etf(" + str(stock_name) + ' : ' + code +
                        ") -> " + str(bought_qty) + "EA bought!" + "`")
     except Exception as ex:
-        dbgout("`buy_etf(" + str(code) + ") -> exception! " + str(ex) + "`")
+        dbgout("`buy_etf(" + code + ") -> exception! " + str(ex) + "`")
 
 
 def sell_all():
