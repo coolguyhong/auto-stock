@@ -183,6 +183,8 @@ def buy_etf(code):
         target_price = get_target_price(code)  # 매수 목표가
         ma5_price = get_movingaverage(code, 5)  # 5일 이동평균가
         ma10_price = get_movingaverage(code, 10)  # 10일 이동평균가
+        printlog('코드, 현재, 타겟, 5일, 10일  ->', code, ' / ', str(current_price), ' / ', str(target_price), ' / ',
+                 str(ma5_price), ' / ', str(ma10_price))
         buy_qty = 0  # 매수할 수량 초기화
         if ask_price > 0:  # 매도호가가 존재하면
             buy_qty = buy_amount // ask_price
