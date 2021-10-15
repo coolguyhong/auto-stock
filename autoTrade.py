@@ -291,22 +291,27 @@ def sell_all():
 if __name__ == '__main__':
     try:
         symbol_list = [
-                    'A225040', 'A360750', 'A360200', 'A379780',
-                    'A143850', 'A219480', 'A379800',  # 미국S&P500
+                    'A225040', # 미국S&P500레버리지(합성 H)
+                    'A122630', 'A123320',  # 코스피200레버리지
+                    'A267770',  # 코스피200선물레버리지
+                    'A233740', 'A233160',  # 코스닥150레버리지
+                    'A278240',  # 코스닥150선물레버리지
+                    'A252670', 'A252710', 'A252420', 'A253230', 'A253160',  # 코스피200곱버스
+                    'A143850', 'A219480',  # 미국S&P500선물(H)
                     'A225030',  # 미국S&P500선물인버스
-                    'A133690', 'A367380', 'A368590', 'A379810', # 미국나스닥100
+                    'A360750', 'A360200', 'A379780', # 미국S&P500
+                    'A379800', # 미국S&P500TR
+                    'A133690', 'A367380', 'A368590', # 미국나스닥100
+                    'A379810', # 미국나스닥100TR
                     'A381180', # 미국필라델피아반도체
-                    'A261220', 'A130680', # WTI원유선물
-                    'A122630', 'A123320', 'A267770', 'A069500',
-                    'A102110', 'A148020', 'A105190', # 코스피200
-                    'A252670', 'A252710', 'A252420', 'A253230',
-                    'A253160', 'A114800', 'A123310', # 코스피200인버스
-                    'A233740', 'A233160', 'A278240', 'A229200', 'A232080', # 코스닥150
+                    'A069500', 'A102110', 'A148020', 'A105190', # 코스피200
+                    'A114800', 'A123310', # 코스피200인버스
+                    'A229200', 'A232080', # 코스닥150
                     'A251340', 'A250780' # 코스닥150선물인버스
                     ]
         bought_list = []  # 매수 완료된 종목 리스트
-        target_buy_count = 4  # 매수할 종목 수
-        buy_percent = 0.20  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
+        target_buy_count = 5  # 매수할 종목 수
+        buy_percent = 0.18  # 각각의 매수 종목을 전체 가용 자금 중 몇 퍼센트를 살 건지 정하는 것
         printlog('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
         stocks = get_stock_balance('ALL')  # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())  # 100% 증거금 주문 가능 금액 조회
@@ -324,7 +329,7 @@ if __name__ == '__main__':
         while True:
             t_now = datetime.now()
             t_9 = t_now.replace(hour=9, minute=0, second=0, microsecond=0)
-            t_start = t_now.replace(hour=9, minute=5, second=0, microsecond=0)
+            t_start = t_now.replace(hour=9, minute=0, second=15, microsecond=0)
             t_sell = t_now.replace(hour=15, minute=15, second=0, microsecond=0)
             t_exit = t_now.replace(hour=15, minute=20, second=0, microsecond=0)
             today = datetime.today().weekday()
@@ -336,7 +341,7 @@ if __name__ == '__main__':
                 soldOut = True
                 dbgout('장 시작 전 팔지 않은 것이 있으면 모두 팔기')
                 sell_all()
-            if t_start < t_now < t_sell:  # AM 09:05 ~ PM 03:15 : 매수
+            if t_start < t_now < t_sell:  # AM 09:00:15 ~ PM 03:15 : 매수
                 for sym in symbol_list:
                     if len(bought_list) < target_buy_count:
                         buy_etf(sym)
